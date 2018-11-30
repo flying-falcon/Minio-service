@@ -1,1 +1,1 @@
-# Minio-daemon
+# Minio-service
