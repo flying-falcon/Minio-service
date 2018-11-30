@@ -1,0 +1,60 @@
+#!/bin/bash
+#
+# Can be called with the following arguments:
+#   - OPTIONS: arguments to pass to the underlying agent process
+#
+# chkconfig: 2345 20 80
+# description: miniod scheduler
+# processname: miniod
+# pidfile: /var/run/miniod.pid
+#
+# Service for minio
+
+. /etc/init.d/functions
+
+NAME=miniod
+PNAME=miniod
+BINARY=/home/y/bin/minio
+PIDFILE=/var/run/miniod.pid
+
+# How to start.
+start() {
+  echo -n "starting ${NAME}..."
+
+  daemon --pidfile=${PIDFILE} ${BINARY} server /data  &
+  RETVAL=$?
+  echo
+  return ${RETVAL}
+}
+
+# How to stop.
+stop() {
+  echo -n "stopping ${NAME}..."
+
+  killall -9 ${PNAME}
+  RETVAL=$?
+  echo
+  return ${RETVAL}
+}
+
+# Handle user arguments.
+case "$1" in
+  start)
+    start
+    ;;
+  stop)
+    stop
+    ;;
+  status)
+    status ${BINARY}
+    ;;
+  restart)
+    stop && start
+    ;;
+  *)
+    echo 'usage: {start|stop|status|restart}'
+    exit 1
+    ;;
+esac
+
+exit $?
